@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProductController extends AbstractController
 {
@@ -61,6 +62,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/products', name: 'app_create_product', methods: ['POST'])]
+    #[IsGranted("ROLE_ADMIN")]
     public function createProduct(Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
