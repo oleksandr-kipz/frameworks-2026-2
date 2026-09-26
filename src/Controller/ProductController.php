@@ -27,9 +27,22 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/products', name: 'app_get_products', methods: ['GET'])]
-    public function getProducts(): JsonResponse
+    public function getProducts(Request $request): JsonResponse
     {
-        $products = $this->entityManager->getRepository(Products::class)->findAll();
+        $queryParams = $request->query->all();
+
+        $page = 1;
+        $itemsPerPage = 5;
+
+        if (isset($queryParams['page'])) {
+            $page = $queryParams['page'];
+        }
+
+        if (isset($queryParams['itemsPerPage'])) {
+            $itemsPerPage = $queryParams['itemsPerPage'];
+        }
+
+        $products = $this->entityManager->getRepository(Products::class)->findAllByParams($page, $itemsPerPage, $queryParams);
 
         return $this->json($products);
     }
